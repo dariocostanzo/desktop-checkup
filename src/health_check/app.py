@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
 """A local desktop health check for supported Ubuntu and Zorin systems."""
 import datetime
@@ -36,7 +35,7 @@ def run(cmd, timeout=60):
     """Run a command and return (exit code, stdout). Never raises."""
     try:
         p = subprocess.run(cmd, capture_output=True, text=True,
-                           timeout=timeout, env=ENV, shell=False)
+                           timeout=timeout, env=ENV, shell=False, check=False)
         return p.returncode, p.stdout
     except FileNotFoundError:
         return 127, ""
@@ -179,7 +178,7 @@ def check_crashes():
                       "No apps have stopped unexpectedly in the last 30 days.")
     lines = text.splitlines()
     shell_crash = "gnome-shell" in text
-    summary = (f"One app stopped unexpectedly in the last 30 days"
+    summary = ("One app stopped unexpectedly in the last 30 days"
                if len(lines) == 1
                else f"{len(lines)} apps stopped unexpectedly in the last 30 days")
     if shell_crash:
@@ -366,11 +365,12 @@ def check_log_errors():
     if rc != 0 and not out.strip():
         return result("log", title, "info", "Could not read system messages.")
     harmless = (
-        re.compile(r"bluetoothd.*(?:sap-server|sap_server_register)", re.I),
-        re.compile(r"gkr-pam.*unable to locate daemon control file", re.I),
-        re.compile(r"GDM_IS_REMOTE_DISPLAY.*assert", re.I),
-        re.compile(r"systemd.*(?:failed|failure).*start.*gnome[- ]keyring.*secrets", re.I),
-        re.compile(r"SGX disabled or unsupported by BIOS", re.I),
+        re.compile(r"bluetoothd.*(?:sap-server|sap_server_register)", re.IGNORECASE),
+        re.compile(r"gkr-pam.*unable to locate daemon control file", re.IGNORECASE),
+        re.compile(r"GDM_IS_REMOTE_DISPLAY.*assert", re.IGNORECASE),
+        re.compile(r"systemd.*(?:failed|failure).*start.*gnome[- ]keyring.*secrets",
+                   re.IGNORECASE),
+        re.compile(r"SGX disabled or unsupported by BIOS", re.IGNORECASE),
     )
 
     def is_harmless(line):
@@ -402,7 +402,7 @@ def check_log_errors():
     if not lines:
         return result("log", title, "ok",
                       f"No unusual error messages since you started up.{hidden_note}")
-    count_text = (f"One unusual error message since you started up"
+    count_text = ("One unusual error message since you started up"
                   if len(lines) == 1
                   else f"{len(lines)} unusual error messages since you started up")
     return result(
@@ -456,14 +456,14 @@ def check_drive():
             levels.append("info")
             continue
         if re.search(r"does not support SMART|SMART support is:\s*Unavailable",
-                     output, re.I):
+                     output, re.IGNORECASE):
             reports.append(f"{device}: this drive does not support SMART.")
             levels.append("info")
             continue
 
         health = re.search(
             r"(?:overall-health self-assessment test result|SMART Health Status)"
-            r":\s*(\w+)", output, re.I)
+            r":\s*(\w+)", output, re.IGNORECASE)
         crit = re.search(r"Critical Warning:\s*(0x[0-9a-fA-F]+)", output)
         used = re.search(r"Percentage Used:\s*(\d+)%", output)
         errs = re.search(r"Media and Data Integrity Errors:\s*(\d+)", output)
@@ -521,7 +521,8 @@ def run_all():
     for fn in CHECKS:
         try:
             out.append(fn())
-        except Exception as exc:  # one broken check must not stop the rest
+        except (ArithmeticError, AttributeError, IndexError, KeyError, OSError,
+                TypeError, ValueError) as exc:
             out.append(result(fn.__name__, fn.__name__.replace("check_", "").title(),
                               "info", "This check could not run.", detail=str(exc)))
     return out
@@ -708,7 +709,8 @@ def run_fix(action):
         argv = command_argv(action, step)
         try:
             completed = subprocess.run(argv, capture_output=True, text=True,
-                                       timeout=900, env=ENV, shell=False)
+                                       timeout=900, env=ENV, shell=False,
+                                       check=False)
             rc = completed.returncode
             text = (completed.stdout or "") + (completed.stderr or "")
         except OSError as exc:
@@ -723,15 +725,13 @@ def run_fix(action):
             text += _("\nThe command took too long and was stopped.")
         output.append(text.strip())
         if rc != 0:
-            if rc in (124, 126, 127):
-                failed_rc = rc
-            elif failed_rc is None:
+            if rc in (124, 126, 127) or failed_rc is None:
                 failed_rc = rc
             joined = "\n".join(part for part in output if part)
             if rc in (124, 126, 127) or re.search(
                     r"could not get lock|unable to acquire.*lock|"
                     r"could not open lock file|is another process using it",
-                    joined, re.I):
+                    joined, re.IGNORECASE):
                 break
     joined = "\n".join(part for part in output if part)
     if failed_rc is None:
@@ -740,7 +740,7 @@ def run_fix(action):
         message = _("The password request was cancelled. No changes were made.")
     elif re.search(r"could not get lock|unable to acquire.*lock|"
                    r"could not open lock file|is another process using it",
-                   joined, re.I):
+                   joined, re.IGNORECASE):
         message = _("Another app is updating your computer. Please try again later.")
     elif failed_rc == 124:
         message = _("The fix took too long and was stopped.")
@@ -951,7 +951,8 @@ def run_gui():
                 succeeded, message, output = run_fix(action)
                 try:
                     updated = check()
-                except Exception as exc:
+                except (ArithmeticError, AttributeError, IndexError, KeyError,
+                        OSError, TypeError, ValueError) as exc:
                     updated = result(check_id, _("Health check"), "info",
                                      _("Could not refresh this check."), detail=str(exc))
                 if not succeeded:
