@@ -15,9 +15,13 @@ Desktop Checkup is a small GNOME desktop app for Ubuntu and Zorin OS that checks
 
 ### Install the Ubuntu 24.04 / Zorin OS 18 package
 
-Download the `.deb` release, open it with Software Install, and choose **Install**. You can also install it from a terminal:
+1. Open the project's GitHub page and select **Releases**. Open the latest release and download `health-check-desktop_0.1.0-1_all.deb` from its **Assets** list. Save it in your **Downloads** folder.
+2. Open **Files**, go to **Downloads**, double-click the `.deb` file, and choose **Install** in Software Install.
+
+You can also install it from a terminal. Run this from the folder where you downloaded the file (for example, `~/Downloads`):
 
 ```sh
+cd ~/Downloads
 sudo apt install ./health-check-desktop_0.1.0-1_all.deb
 ```
 
