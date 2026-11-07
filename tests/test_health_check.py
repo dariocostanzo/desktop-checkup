@@ -15,7 +15,7 @@ from unittest.mock import mock_open, patch
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from health_check import app  # noqa: E402
+from health_check import app
 
 
 class RunHelperTests(unittest.TestCase):
@@ -128,19 +128,17 @@ class CheckTests(unittest.TestCase):
             self.assertEqual(app.check_services()["level"], "info")
 
     def test_log_hides_known_messages_and_counts_them(self):
-        logs = "\n".join([
-            "bluetoothd[1]: sap-server failed",
-            "bluetoothd[1]: sap_server_register failed",
-            "pam: gkr-pam: unable to locate daemon control file",
-            "gdm: GDM_IS_REMOTE_DISPLAY assertion failed",
-            "systemd: Failed to start gnome-keyring secrets",
-            r"systemd: Failed to start app-gnome\x2dkeyring\x2dssh.scope",
-            "systemd: Failed to start app-spice-vdagent.scope",
-            "kernel: SGX disabled or unsupported by BIOS",
-            "kernel: nvme0n1 AER corrected error",
-            "kernel: wireless-device0 AER corrected error",
-            "systemd: unusual problem",
-        ])
+        logs = fr"""bluetoothd[1]: sap-server failed
+bluetoothd[1]: sap_server_register failed
+pam: gkr-pam: unable to locate daemon control file
+gdm: GDM_IS_REMOTE_DISPLAY assertion failed
+systemd: Failed to start gnome-keyring secrets
+systemd: Failed to start app-gnome\x2dkeyring\x2dssh.scope
+systemd: Failed to start app-spice-vdagent.scope
+kernel: SGX disabled or unsupported by BIOS
+kernel: nvme0n1 AER corrected error
+kernel: wireless-device0 AER corrected error
+systemd: unusual problem"""
         with patch.object(app, "run", return_value=(0, logs)):
             result = app.check_log_errors()
         self.assertIn("One unusual error", result["summary"])
@@ -155,11 +153,9 @@ class CheckTests(unittest.TestCase):
         self.assertEqual(result["detail"].count("AER"), 2)
 
     def test_hardware_check_groups_aer_messages_by_log_device_name(self):
-        logs = "\n".join([
-            "kernel: nvme0 0000:01:00.0: AER corrected error",
-            "kernel: nvme0 0000:01:00.0: AER corrected error",
-            "kernel: wifi0 0000:02:00.0: AER corrected error",
-        ])
+        logs = f"""kernel: nvme0 0000:01:00.0: AER corrected error
+kernel: nvme0 0000:01:00.0: AER corrected error
+kernel: wifi0 0000:02:00.0: AER corrected error"""
         with patch.object(app, "run", return_value=(0, logs)):
             result = app.check_hardware()
         self.assertEqual(result["level"], "info")
