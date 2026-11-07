@@ -9,7 +9,7 @@ Desktop Checkup is a small GNOME desktop app for Ubuntu and Zorin OS that checks
 
 ## Screenshot
 
-_Screenshot placeholder: add a screenshot of the app here before the first release._
+![Desktop Checkup showing a successful check and the available system checks](screenshots/desktop-checkup.png)
 
 ## Install
 
@@ -130,37 +130,3 @@ The second command removes only Desktop Checkup's saved status folder. The sourc
 ## License
 
 GPL-3.0-or-later. See [LICENSE](LICENSE).
-
-## GitHub project setup
-
-The suggested GitHub repository is **`dariocostanzo/desktop-checkup`**. Create it as a **Public** repository so people can access the source and open issues. Do not have GitHub add a README, `.gitignore`, or license during creation; these files are already in this project.
-
-Suggested repository description:
-
-> Privacy-first local health checks for GNOME on Ubuntu and Zorin OS.
-
-Suggested topics: `linux`, `gnome`, `ubuntu`, `zorin-os`, `python`, `gtk4`, `privacy`, `system-monitor`.
-
-The app's display name is **Desktop Checkup**. The Linux app ID is `io.github.dariocostanzo.DesktopCheckup`; the Debian package and command are `health-check-desktop` to avoid conflict with Ubuntu's existing `health-check` command.
-
-After creating the empty GitHub repository, open a terminal in this project folder and run:
-
-```sh
-git init -b main
-git add .
-git status
-```
-
-Check the file list carefully before the first commit. It contains no laptop account name, hostname, or drive name; the GitHub handle appears only in the public app ID and repository links. Then commit and connect the remote:
-
-```sh
-git commit -m "Prepare Desktop Checkup for first public release"
-git remote add origin https://github.com/dariocostanzo/desktop-checkup.git
-git push -u origin main
-```
-
-If Git asks for your author name or email, set those using your preferred public identity. Never put passwords or access tokens in the remote URL or in project files.
-
-On GitHub, check **Settings → General** to confirm the repository is public, then enable **Settings → Security → Private vulnerability reporting** if the option is available. The project includes issue templates and a security policy.
-
-Before tagging a release, add an actual screenshot, manually test the app on supported computers, and update the **Tested on** table above. Build the `.deb` with `./packaging/build-deb.sh`, create a GitHub Release, and attach the resulting `dist/health-check-desktop_0.1.0-1_all.deb`.
