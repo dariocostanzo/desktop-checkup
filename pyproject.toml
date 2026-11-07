@@ -12,6 +12,9 @@ requires-python = ">=3.10"
 license = { text = "GPL-3.0-or-later" }
 dependencies = []
 
+[project.optional-dependencies]
+dev = ["ruff"]
+
 [project.urls]
 Homepage = "https://github.com/dariocostanzo/desktop-checkup"
 Repository = "https://github.com/dariocostanzo/desktop-checkup"

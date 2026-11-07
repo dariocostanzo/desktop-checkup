@@ -4,7 +4,13 @@ Thank you for helping improve Desktop Checkup. Small, clear changes are easiest 
 
 ## Run the tests
 
-From the project directory:
+From the project directory, install the development dependencies:
+
+```sh
+python3 -m pip install -e ".[dev]"
+```
+
+Then run the tests:
 
 ```sh
 python3 -m unittest discover -s tests -v
@@ -13,7 +19,7 @@ python3 -m unittest discover -s tests -v
 Run the linter with:
 
 ```sh
-ruff check .
+python3 -m ruff check .
 ```
 
 Ruff is used for development and CI; it is not a runtime dependency of the app.
