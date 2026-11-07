@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<component type="desktop-application">
+  <id>io.github.dariocostanzo.DesktopCheckup</id>
+  <name>Desktop Checkup</name>
+  <summary>Understand common health checks for your computer</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <developer id="io.github.dariocostanzo">
+    <name>Desktop Checkup contributors</name>
+  </developer>
+  <url type="homepage">https://github.com/dariocostanzo/desktop-checkup</url>
+  <launchable type="desktop-id">io.github.dariocostanzo.DesktopCheckup.desktop</launchable>
+  <description>
+    <p>Desktop Checkup runs local checks and explains common findings about software,
+    storage, memory, services, system logs, and drive health in plain language.</p>
+  </description>
+  <categories>
+    <category>System</category>
+    <category>Utility</category>
+  </categories>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="0.1.0" date="2026-11-07">
+      <description><p>First public preview.</p></description>
+    </release>
+  </releases>
+</component>

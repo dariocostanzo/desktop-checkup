@@ -1,0 +1,10 @@
+Package: health-check-desktop
+Version: 0.1.0-1
+Section: admin
+Priority: optional
+Architecture: all
+Maintainer: Desktop Checkup contributors
+Depends: python3, python3-gi, gir1.2-gtk-4.0, gir1.2-adw-1, smartmontools, policykit-1
+Description: Local desktop health checks for Ubuntu and Zorin OS
+ Desktop Checkup explains common desktop, software, storage, memory, service,
+ log, and drive health findings. It runs locally and does not contact servers.

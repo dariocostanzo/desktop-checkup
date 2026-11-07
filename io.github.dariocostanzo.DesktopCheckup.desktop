@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+[Desktop Entry]
+Type=Application
+Name=Desktop Checkup
+Comment=Check your desktop computer's health
+Exec=health-check-desktop
+Icon=io.github.dariocostanzo.DesktopCheckup
+Terminal=false
+Categories=System;Monitor;
+Keywords=system;health;hardware;storage;
+X-GNOME-Gettext-Domain=desktop-checkup

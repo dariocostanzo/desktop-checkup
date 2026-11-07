@@ -1,0 +1,28 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "health-check-desktop"
+version = "0.1.0"
+description = "A local desktop health check for Ubuntu and Zorin OS"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "GPL-3.0-or-later" }
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/dariocostanzo/desktop-checkup"
+Repository = "https://github.com/dariocostanzo/desktop-checkup"
+Issues = "https://github.com/dariocostanzo/desktop-checkup/issues"
+
+[project.scripts]
+health-check-desktop = "health_check.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
